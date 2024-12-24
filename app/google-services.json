@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "730454357723",
+    "project_id": "jay-portfolio-b0614",
+    "storage_bucket": "jay-portfolio-b0614.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730454357723:android:6de9b800c5ab21b1223efe",
+        "android_client_info": {
+          "package_name": "com.jay.myportfollio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpZD3Tyhy9sy7HjOTWRKmd7bpHzkdd6qc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
