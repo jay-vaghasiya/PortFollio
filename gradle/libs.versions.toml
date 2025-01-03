@@ -4,6 +4,7 @@ coilNetworkOkhttp = "3.0.4"
 firebaseBom = "33.7.0"
 koinAndroidxCompose = "4.0.0"
 kotlin = "1.9.0"
+firebase = "4.4.2"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -44,4 +45,5 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+firebase = { id = "com.google.gms.google-services", version.ref = "firebase" }
 

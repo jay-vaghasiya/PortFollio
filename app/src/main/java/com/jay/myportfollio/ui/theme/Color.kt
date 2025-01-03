@@ -13,10 +13,22 @@ val Pink40 = Color(0xFF7D5260)
 
 val OrangeRed = Color(0xFFF37261)
 
-val LightOrangeRed = lerp(OrangeRed, Color.White, 0.3f)
+val Pink = Color(0xFFbc82ff)
+val Pink50 = Color(0xFFf197bc)
 val Blue = Color(0xFF142131)
-val GrayBlue = Color(0xFF2F3D59)
-val BlackBlue = Color(0xFF0B1326)
-val NavyBlue = Color(0xFF000113)
+val GrayBlue = Color(0xFF84a1c4)
+val BlueGray = Color(0xFF97b1ef)
+val BlueLight = Color(0xFF7dc8d3)
+val NavyBlue = Color(0xFF364864)
 val BBlue = Color(0xFF143061)
 val LightBlue = Color(0xFF1857D1)
+
+val DarkGray = Color(0xFF25262f)
+val BlackGray = Color(0xFF0C0D15)
+
+val RBlue = Color(0xFf1e2959)
+val RRed= Color(0xFfda2126)
+val RGray= Color(0xFF797879)
+
+val skyBlue =Color(0xFFcdf0f5)
+val skyLightBlue =Color(0xFFdfedf3)

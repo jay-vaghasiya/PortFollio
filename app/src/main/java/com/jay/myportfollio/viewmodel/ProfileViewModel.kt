@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jay.myportfollio.model.datamodel.FireStoreResult
 import com.jay.myportfollio.model.datamodel.Profile
-import com.jay.myportfollio.model.repository.ProfileRepository
+import com.jay.myportfollio.model.repository.profile.ProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

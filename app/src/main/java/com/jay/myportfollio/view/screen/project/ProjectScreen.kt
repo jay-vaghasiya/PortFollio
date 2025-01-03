@@ -1,4 +1,4 @@
-package com.jay.myportfollio.view.screen
+package com.jay.myportfollio.view.screen.project
 
 import androidx.compose.runtime.Composable
 
