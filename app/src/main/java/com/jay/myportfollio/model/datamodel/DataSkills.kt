@@ -3,6 +3,6 @@ package com.jay.myportfollio.model.datamodel
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Details(
-    val points: List<String> = emptyList()
+data class DataSkills(
+    val list: List<String> = emptyList()
 )

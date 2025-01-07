@@ -1,6 +1,9 @@
 package com.jay.myportfollio.model.datamodel
 
-data class Profile(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class DataProfile(
     val name: String? = "",
     val email: String? = "",
     val github: String? = "",
@@ -9,7 +12,6 @@ data class Profile(
     val education: String? = "",
     val phone: String? = "",
     val current_location: String? = "",
-    val birth_date: Long? = 0L,
     val role: String? = "",
     val total_experience: String? = ""
 )

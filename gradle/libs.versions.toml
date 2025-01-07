@@ -3,7 +3,7 @@ agp = "8.6.1"
 coilNetworkOkhttp = "3.0.4"
 firebaseBom = "33.7.0"
 koinAndroidxCompose = "4.0.0"
-kotlin = "1.9.0"
+kotlin = "2.0.0"
 firebase = "4.4.2"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -16,6 +16,7 @@ composeBom = "2024.12.01"
 materialIconsExtendedAndroid = "1.7.6"
 navigationCompose = "2.8.5"
 firebaseFirestoreKtx = "25.1.1"
+serialization = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,9 +42,11 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 firebase = { id = "com.google.gms.google-services", version.ref = "firebase" }
-
+kotlin-serialization= {id = "org.jetbrains.kotlin.plugin.serialization",version.ref = "kotlin"}
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -1,5 +1,14 @@
 package com.jay.myportfollio.utils
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ContactMail
+import androidx.compose.material.icons.outlined.Fitbit
+import androidx.compose.material.icons.outlined.Work
+import com.jay.myportfollio.model.datamodel.ContactItem
+import com.jay.myportfollio.ui.theme.BlueGray
+import com.jay.myportfollio.ui.theme.BlueLight
+import com.jay.myportfollio.ui.theme.Pink50
+
 object Constant {
     // Label
     const val PROFILE = "Profile"
@@ -20,4 +29,11 @@ object Constant {
     const val PADDING_INNER_CIRCLE = 0.3f
     const val POSITION_OFFSET_OUTER_CIRCLE = 90f
     const val POSITION_OFFSET_INNER_CIRCLE = 135f
+
+
+    val list = listOf(
+        ContactItem(Icons.Outlined.Work, "know my\n work", Pink50),
+        ContactItem(Icons.Outlined.ContactMail, "about\n me", BlueLight),
+        ContactItem(Icons.Outlined.Fitbit, "where\n i am", BlueGray)
+    )
 }

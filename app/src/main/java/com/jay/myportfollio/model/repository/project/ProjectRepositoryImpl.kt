@@ -1,27 +1,27 @@
-package com.jay.myportfollio.model.repository.experience
+package com.jay.myportfollio.model.repository.project
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.jay.myportfollio.model.datamodel.DataExperience
+import com.jay.myportfollio.model.datamodel.Project
 import com.jay.myportfollio.model.datamodel.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class ExperienceRepositoryImpl : ExperienceRepository {
+class ProjectRepositoryImpl : ProjectRepository {
     private val firestore = FirebaseFirestore.getInstance()
-    override suspend fun getExperienceList(): Result<List<DataExperience>> {
+    override suspend fun getProjectList(): Result<List<Project>> {
         return withContext(Dispatchers.IO) {
             try {
                 val snapShot =
                     firestore
-                        .collection("experience")
+                        .collection("project")
                         .get()
                         .await()
 
-                val experience = snapShot.toObjects(DataExperience::class.java)
+                val projects = snapShot.toObjects(Project::class.java)
 
-                if (experience.isNotEmpty()) {
-                    Result.Success(experience)
+                if (projects.isNotEmpty()) {
+                    Result.Success(projects)
                 } else {
                     Result.Error(Exception("User not found"))
                 }
