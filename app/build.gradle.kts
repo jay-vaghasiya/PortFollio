@@ -86,4 +86,11 @@ dependencies {
     implementation (libs.koin.androidx.compose)
     implementation(libs.kotlinx.serialization.json)
 
+    //Pagination
+    implementation (libs.androidx.paging.runtime.ktx)
+    // optional - Jetpack Compose integration
+    implementation(libs.androidx.paging.compose)
+
+    implementation(libs.logging.interceptor)
+
 }

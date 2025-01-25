@@ -160,8 +160,9 @@ fun ContactMeScreen(email:String,phone:String,navController: NavHostController) 
                     }
                 }
             }
-            val intent = Intent(Intent.ACTION_DIAL)
-            intent.setData(Uri.parse(phone))
+            val intent = Intent(Intent.ACTION_DIAL).apply {
+                data = Uri.parse("tel:$phone")
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

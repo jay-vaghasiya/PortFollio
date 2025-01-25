@@ -9,6 +9,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,34 +36,35 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.jay.myportfollio.model.datamodel.DataExperience
+import com.jay.myportfollio.model.datamodel.Project
 import com.jay.myportfollio.model.datamodel.Result
-import com.jay.myportfollio.ui.theme.Blue
-import com.jay.myportfollio.ui.theme.BlueLight
+import com.jay.myportfollio.ui.theme.BlackGray
+import com.jay.myportfollio.ui.theme.BlueGray
 import com.jay.myportfollio.ui.theme.OrangeRed
+import com.jay.myportfollio.ui.theme.Pink
+import com.jay.myportfollio.ui.theme.Pink40
 import com.jay.myportfollio.ui.theme.Pink50
+import com.jay.myportfollio.ui.theme.Pink80
 import com.jay.myportfollio.utils.PulseLoading
 import com.jay.myportfollio.utils.StrawFordFont
-import com.jay.myportfollio.viewmodel.ExperienceViewModel
-import kotlinx.coroutines.delay
+import com.jay.myportfollio.viewmodel.ProjectViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun KnowMyWorkScreen(navController: NavHostController) {
-    val viewmodel: ExperienceViewModel = koinViewModel()
-    val userState by viewmodel.experienceState.collectAsState()
+
+    val viewmodel: ProjectViewModel = koinViewModel()
+    val userState by viewmodel.projectState.collectAsState()
 
 
     // Trigger data fetching
     LaunchedEffect(Unit) {
-        delay(1000)
-        viewmodel.fetchUser()
+        viewmodel.fetchProjects()
     }
 
     AnimatedContent(
@@ -103,7 +105,7 @@ fun KnowMyWorkScreen(navController: NavHostController) {
 }
 
 @Composable
-fun ExperienceContent(navController: NavHostController,experiences: List<DataExperience>) {
+fun ExperienceContent(navController: NavHostController, experiences: List<Project>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -142,163 +144,59 @@ fun ExperienceContent(navController: NavHostController,experiences: List<DataExp
             elevation = CardDefaults.elevatedCardElevation(24.dp),
             shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(BlueLight)
-            ) {
-
-                IconButton(onClick = {}, modifier = Modifier.padding(8.dp)) {
-                    Icon(
-                        Icons.AutoMirrored.Rounded.ArrowBack,
-                        null,
-                        modifier = Modifier.size(32.dp),
-                        tint = Color.White
-                    )
+            LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
+                itemsIndexed(items = experiences) { index, experience ->
+                    ExperienceCard(experience, index)
+                }
                 }
 
-                Text(
-                    text = "Where I am",
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = StrawFordFont.FontFamily,
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = Color.White
-                )
-                ElevatedCard(
-                    modifier = Modifier
-                        .padding(top = 24.dp)
-                        .fillMaxWidth()
-                        .weight(1f),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = Color.White
-                    ),
-                    elevation = CardDefaults.elevatedCardElevation(24.dp),
-                    shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
-                ) {
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        itemsIndexed(items = experiences) { index, experience ->
-                            ExperienceCard(experience, index)
-                        }
-                    }
-                }
             }
         }
     }
 
-}
 
 @Composable
-fun ExperienceCard(experience: DataExperience, index: Int) {
+fun ExperienceCard(experience: Project, index: Int) {
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-            .background(
-                color = Blue, shape = RoundedCornerShape(32.dp)
-            )
-            .clip(
-                RoundedCornerShape(32.dp)
-            )
-    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp, horizontal = 12.dp)
-            ) {
-                Text(
-                    text = experience.employer_name,
+
+            Text(
+                text = experience.name.toString(),
                     modifier = Modifier,
                     fontFamily = StrawFordFont.FontFamily,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = experience.location,
-                    modifier = Modifier.align(Alignment.Bottom),
-                    fontFamily = StrawFordFont.FontFamily,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.White
-                )
-            }
-
-            Text(
-                text = experience.role,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp, horizontal = 12.dp),
-                fontFamily = StrawFordFont.FontFamily,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White
-            )
-
-            Text(
-                text = experience.start_timeline + " To " + experience.end_timeline,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp, horizontal = 12.dp),
-                fontFamily = StrawFordFont.FontFamily,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleSmall,
-                color = Color.White
-            )
-
-
-            Text(
-                text = workFromHome(experience.wfh),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp, horizontal = 12.dp),
-                fontFamily = StrawFordFont.FontFamily,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleSmall,
-                color = Color.White
-            )
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 12.dp),
-                color = OrangeRed,
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp, horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Show More",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    fontFamily = StrawFordFont.FontFamily,
                     fontWeight = FontWeight.Normal,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.White
+                    style = MaterialTheme.typography.titleLarge,
+                color = BlackGray
                 )
-                Icon(
-                    contentDescription = null,
-                    imageVector = Icons.Rounded.RemoveRedEye,
-                    tint = Color.White
-                )
-            }
 
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = experience.description.toString(),
+                modifier = Modifier,
+                    fontFamily = StrawFordFont.FontFamily,
+                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.titleSmall,
+                color = BlackGray
+            )
+
+
+            Text(
+                text = experience.skill.joinToString(", "),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                fontFamily = StrawFordFont.FontFamily,
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.titleMedium,
+                color = BlackGray
+            )
 
         }
     }
-}
 
 
 fun workFromHome(wfh: Int): String {

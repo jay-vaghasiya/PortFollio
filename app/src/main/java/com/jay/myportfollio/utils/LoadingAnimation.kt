@@ -122,9 +122,7 @@ fun PulseLoading(
 
 }
 
-@Preview(
-
-)
+@Preview()
 @Composable
 private fun PulseLoadingPrev() {
     MyPortFollioTheme {

@@ -14,7 +14,7 @@ class ProjectRepositoryImpl : ProjectRepository {
             try {
                 val snapShot =
                     firestore
-                        .collection("project")
+                        .collection("projects")
                         .get()
                         .await()
 
@@ -23,7 +23,7 @@ class ProjectRepositoryImpl : ProjectRepository {
                 if (projects.isNotEmpty()) {
                     Result.Success(projects)
                 } else {
-                    Result.Error(Exception("User not found"))
+                    Result.Error(Exception("Projects not found"))
                 }
             } catch (e: Exception) {
                 Result.Error(e)

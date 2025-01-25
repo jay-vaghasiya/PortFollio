@@ -17,24 +17,25 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
+
     single<ProfileRepository> {
-        Log.d("KoinModule", "Repository initialized")
+        Log.d("KoinModule", "Profile Repository initialized")
         ProfileRepositoryImpl() }
     viewModel { ProfileViewModel(get()) }
 
     single<ExperienceRepository> {
-        Log.d("KoinModule", "Repository initialized")
+        Log.d("KoinModule", "Experience Repository initialized")
         ExperienceRepositoryImpl() }
     viewModel { ExperienceViewModel(get()) }
 
     single<ProjectRepository> {
-        Log.d("KoinModule", "Repository initialized")
+        Log.d("KoinModule", "Projects Repository initialized")
         ProjectRepositoryImpl()
     }
     viewModel { ProjectViewModel(get()) }
 
     single<SkillsRepository> {
-        Log.d("KoinModule", "Repository initialized")
+        Log.d("KoinModule", "Skills Repository initialized")
         SkillsRepositoryImpl()
     }
     viewModel { SkillsViewModel(get()) }

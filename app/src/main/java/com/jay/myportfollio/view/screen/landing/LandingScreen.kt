@@ -47,6 +47,7 @@ import com.jay.myportfollio.R
 import com.jay.myportfollio.model.datamodel.AboutMe
 import com.jay.myportfollio.model.datamodel.ContactMe
 import com.jay.myportfollio.model.datamodel.DataProfile
+import com.jay.myportfollio.model.datamodel.KnowMyWork
 import com.jay.myportfollio.model.datamodel.MyWork
 import com.jay.myportfollio.model.datamodel.Result
 import com.jay.myportfollio.model.datamodel.WhereIAm
@@ -253,7 +254,7 @@ fun ProfileContent(user: DataProfile, navController: NavHostController) {
                                         when (index) {
                                             0 -> {
                                                 navController.navigate(
-                                                    MyWork
+                                                    KnowMyWork
                                                 )
                                             }
 
