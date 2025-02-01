@@ -12,7 +12,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.jay.myportfollio.model.datamodel.DataExperience
 import com.jay.myportfollio.model.datamodel.Details
 import com.jay.myportfollio.model.datamodel.Result
-import com.jay.myportfollio.ui.theme.GrayBlue
 import com.jay.myportfollio.ui.theme.NavyBlue
 import com.jay.myportfollio.utils.StrawFordFont
 import com.jay.myportfollio.utils.TripleOrbitLoading
@@ -86,14 +84,14 @@ fun ExperiencePage(modifier: Modifier = Modifier) {
                         null
                     }
                 }
-                ExperienceListContent(user, modifier, details)
+                ExperienceListContent(user, details)
             }
 
             is Result.Error -> {
                 val error = targetState.exception.message
                 Text(
                     text = "Error: $error",
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxSize()
                         .background(Color.Red),
                     color = Color.White
@@ -108,14 +106,8 @@ fun ExperiencePage(modifier: Modifier = Modifier) {
 @Composable
 fun ExperienceListContent(
     user: List<DataExperience>,
-    modifier: Modifier,
     details: Details?
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-
-    // Display only the first 3 points if not expanded, otherwise show all points
-    val displayedPoints = if (isExpanded) details?.points else details?.points?.take(2)
-
     LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(24.dp)) {
         items(items = user) { item: DataExperience ->
             Column(modifier = Modifier

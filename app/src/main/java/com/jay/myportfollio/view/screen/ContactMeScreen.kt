@@ -92,7 +92,7 @@ fun ContactMeScreen(email:String,phone:String,navController: NavHostController) 
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(32.dp))
                     .background(
-                        color = BBlue
+                        color = Pink
                     )
                     .clickable {
                         context.sendMail(email)
@@ -173,7 +173,7 @@ fun ContactMeScreen(email:String,phone:String,navController: NavHostController) 
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(32.dp))
                     .background(
-                        color = BBlue
+                        color = Pink
                     )
                     .clickable {
                         context.startActivity(intent)

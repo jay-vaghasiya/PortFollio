@@ -27,7 +27,7 @@ fun GlassMorphicBox(onClick: () -> Unit, content: @Composable() (BoxScope.() -> 
                 color = Color.White.copy(alpha = 0.2f),
                 shape = RoundedCornerShape(16.dp)
             )
-            .padding(16.dp)
+            .padding(8.dp)
             .clickable { onClick() },
         contentAlignment = Alignment.Center,
         content = content

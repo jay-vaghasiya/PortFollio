@@ -199,9 +199,3 @@ fun ExperienceCard(experience: Project, index: Int) {
     }
 
 
-fun workFromHome(wfh: Int): String {
-    return when (wfh) {
-        0 -> "On-Site"
-        else -> "Remote"
-    }
-}

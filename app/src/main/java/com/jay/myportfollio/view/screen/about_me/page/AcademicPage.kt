@@ -17,14 +17,14 @@ import com.jay.myportfollio.ui.theme.NavyBlue
 import com.jay.myportfollio.utils.StrawFordFont
 
 @Composable
-fun ProfileSummary(modifier: Modifier = Modifier, user: DataProfile) {
+fun AcademicPage(modifier: Modifier = Modifier, user: DataProfile) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
     ) {
         Text(
-            text = "Hello!",
+            text = user.education.toString(),
             style = MaterialTheme.typography.headlineMedium,
             fontFamily = StrawFordFont.FontFamily,
             color = NavyBlue,
@@ -34,16 +34,16 @@ fun ProfileSummary(modifier: Modifier = Modifier, user: DataProfile) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = user.summary.toString(),
+            text = user.stream.toString(),
             fontFamily = StrawFordFont.FontFamily,
             color = GrayBlue,
             fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Current Location",
-            style = MaterialTheme.typography.headlineSmall,
+            text = user.institute.toString(),
+            style = MaterialTheme.typography.bodyLarge,
             fontFamily = StrawFordFont.FontFamily,
             color = NavyBlue,
             fontWeight = FontWeight.SemiBold
@@ -52,13 +52,11 @@ fun ProfileSummary(modifier: Modifier = Modifier, user: DataProfile) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = user.current_location.toString(),
+            text = "With CGPA of "+user.cgpa.toString(),
             fontFamily = StrawFordFont.FontFamily,
             color = GrayBlue,
             fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }
-
-
