@@ -6,5 +6,4 @@ import com.jay.myportfollio.model.datamodel.Result
 
 interface ExperienceRepository {
     suspend fun getExperienceList(): Result<List<DataExperience>>
-    suspend fun getExperienceBulletPoints(): Result<Details>
 }

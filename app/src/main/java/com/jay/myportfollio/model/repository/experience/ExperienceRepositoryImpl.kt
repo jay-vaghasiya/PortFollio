@@ -13,56 +13,31 @@ class ExperienceRepositoryImpl : ExperienceRepository {
     override suspend fun getExperienceList(): Result<List<DataExperience>> {
         return withContext(Dispatchers.IO) {
             try {
-                val snapShot =
-                    firestore
-                        .collection("experience")
-                        .get()
-                        .await()
+                val snapShot = firestore.collection("experience").get().await()
+                val experiences = mutableListOf<DataExperience>()
 
-                val experience = snapShot.toObjects(DataExperience::class.java)
+                for (doc in snapShot.documents) {
+                    val experience = doc.toObject(DataExperience::class.java)
+                    val detailsSnapshot = doc.reference.collection("details").get().await()
+                    val detailsList = detailsSnapshot.toObjects(Details::class.java)
 
-                if (experience.isNotEmpty()) {
-                    Result.Success(experience)
-                } else {
-                    Result.Error(Exception("User not found"))
-                }
-            } catch (e: Exception) {
-                Result.Error(e)
-
-            }
-        }
-    }
-
-    override suspend fun getExperienceBulletPoints(): Result<Details> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val experienceSnapshot = firestore
-                    .collection("experience")
-                    .get()
-                    .await()
-
-                val details = experienceSnapshot.documents
-                    .mapNotNull { document ->
-                        val detailsSnapshot = document.reference
-                            .collection("details")
-                            .document("1")
-                            .get()
-                            .await()
-
-                        detailsSnapshot.toObject(Details::class.java)
+                    if (experience != null) {
+                        experiences.add(experience.copy(details = detailsList))
                     }
-                    .firstOrNull()
+                }
 
-                return@withContext if (details != null) {
-                    Result.Success(details)
+                return@withContext if (experiences.isNotEmpty()) {
+                    Result.Success(experiences)
                 } else {
-                    Result.Error(Exception("Details document '1' not found"))
+                    Result.Error(Exception("No experiences found"))
                 }
             } catch (e: Exception) {
                 Result.Error(e)
             }
         }
     }
+
+
 
 
 }

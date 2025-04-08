@@ -153,16 +153,15 @@ fun ProfileContent(user: DataProfile, navController: NavHostController) {
                     color = GrayBlue
                 )
                 Image(
-                    painter = painterResource(R.drawable.iv_profile_photo),
+                    painter = painterResource(R.drawable.image),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
+                        .fillMaxSize()
                         .clip(
-                            RoundedCornerShape(32.dp)
+                            RoundedCornerShape(24.dp)
                         ),
-                    alignment = Alignment.TopCenter,
+                    alignment = Alignment.Center,
                     contentDescription = "Profile Photo",
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.Crop
                 )
             }
             ElevatedCard(

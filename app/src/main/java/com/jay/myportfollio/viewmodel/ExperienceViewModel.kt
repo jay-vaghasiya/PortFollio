@@ -11,27 +11,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ExperienceViewModel(private val repository: ExperienceRepository) : ViewModel() {
-    private val _experienceState =
-        MutableStateFlow<Result<List<DataExperience>>>(Result.Loading)
+    private val _experienceState = MutableStateFlow<Result<List<DataExperience>>>(Result.Loading)
     val experienceState: StateFlow<Result<List<DataExperience>>> = _experienceState
 
-    private val _bulletPointsState =
-        MutableStateFlow<Result<Details>>(Result.Loading)
-    val bulletPointsState: StateFlow<Result<Details>> = _bulletPointsState
-
-    fun fetchUser() {
+    fun fetchExperienceData() {
         viewModelScope.launch {
             _experienceState.value = Result.Loading
-            val result = repository.getExperienceList()
-            _experienceState.value = result
-        }
-    }
-
-    fun fetchBulletPoints() {
-        viewModelScope.launch {
-            _bulletPointsState.value = Result.Loading
-            val result = repository.getExperienceBulletPoints()
-            _bulletPointsState.value = result
+            _experienceState.value = repository.getExperienceList()
         }
     }
 }

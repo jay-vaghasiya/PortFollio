@@ -1,6 +1,5 @@
 package com.jay.myportfollio.view.screen.about_me.page
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -24,16 +23,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jay.myportfollio.model.datamodel.DataExperience
 import com.jay.myportfollio.model.datamodel.Details
 import com.jay.myportfollio.model.datamodel.Result
@@ -46,13 +45,11 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ExperiencePage(modifier: Modifier = Modifier) {
     val viewmodel: ExperienceViewModel = koinViewModel()
-    val userState by viewmodel.experienceState.collectAsState()
-    val detailsState by viewmodel.bulletPointsState.collectAsState()
+    val userState by viewmodel.experienceState.collectAsStateWithLifecycle()
 
     // Trigger data fetching
     LaunchedEffect(Unit) {
-        viewmodel.fetchUser()
-        viewmodel.fetchBulletPoints()
+        viewmodel.fetchExperienceData()
     }
 
     AnimatedContent(
@@ -74,17 +71,7 @@ fun ExperiencePage(modifier: Modifier = Modifier) {
 
             is Result.Success -> {
                 val user = targetState.data
-                val details = when (detailsState) {
-                    is Result.Success -> (detailsState as Result.Success<Details>).data
-                    is Result.Error -> {
-                        null
-                    }
-
-                    is Result.Loading -> {
-                        null
-                    }
-                }
-                ExperienceListContent(user, details)
+                ExperienceListContent(user)
             }
 
             is Result.Error -> {
@@ -106,10 +93,16 @@ fun ExperiencePage(modifier: Modifier = Modifier) {
 @Composable
 fun ExperienceListContent(
     user: List<DataExperience>,
-    details: Details?
 ) {
+    val expandedStates = remember {
+        mutableStateMapOf<Int, Boolean>().apply {
+            user.forEach { put(it.id, false) }
+        }
+    }
+
+
     LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(24.dp)) {
-        items(items = user) { item: DataExperience ->
+        items(items = user, key = { it.id }) { item: DataExperience ->
             Column(modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp)) {
@@ -122,7 +115,7 @@ fun ExperienceListContent(
                 )
 
                 Text(
-                    text = item.start_timeline + " - " + item.end_timeline,
+                    text = item.start_timeline + " TO " + item.end_timeline,
                     fontFamily = StrawFordFont.FontFamily,
                     color = Color.Black,
                     fontWeight = FontWeight.SemiBold,
@@ -144,9 +137,14 @@ fun ExperienceListContent(
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                Log.d("detailsList",details?.points.toString())
-                if (details != null) {
-                    BulletPointText(details.points)
+                if (item.details.isNotEmpty()) {
+                    BulletPointText(
+                        detailsList = item.details,
+                        isExpanded = expandedStates[item.id] ?: false,
+                        onToggleExpand = {
+                            expandedStates[item.id] = !(expandedStates[item.id] ?: false)
+                        }
+                    )
                 }
 
             }
@@ -156,40 +154,46 @@ fun ExperienceListContent(
 }
 
 @Composable
-fun BulletPointText(points: List<String>?) {
-    var isExpanded by remember { mutableStateOf(false) }
+fun BulletPointText(
+    detailsList: List<Details>?,
+    isExpanded: Boolean,
+    onToggleExpand: () -> Unit
+) {
+    val allPoints = remember(detailsList) {
+        detailsList?.flatMap { it.points } ?: emptyList()
+    }
 
-    // Display only the first 3 points if not expanded, otherwise show all points
-    val displayedPoints = if (isExpanded) points else points?.take(3)
+    val displayedPoints by remember(isExpanded, allPoints) {
+        derivedStateOf { if (isExpanded) allPoints else allPoints.take(3) }
+    }
 
     Column(
         modifier = Modifier
             .padding(start = 16.dp)
-            .animateContentSize() // Smooth transition on content size change
+            .animateContentSize()
     ) {
-        displayedPoints?.forEach { point ->
+        displayedPoints.forEach { point ->
             Text(
                 text = "• $point",
                 fontFamily = StrawFordFont.FontFamily,
                 color = NavyBlue,
                 fontWeight = FontWeight.Normal,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
-        // Show "Show more" or "Show less" based on expansion state
-        if (points != null && points.size > 3) {
+        if (allPoints.size > 3) {
             Text(
                 text = if (isExpanded) "Show less" else "Show more",
                 fontFamily = StrawFordFont.FontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .clickable { isExpanded = !isExpanded }
+                    .clickable { onToggleExpand() }
                     .padding(top = 8.dp),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
     }
 }
-
