@@ -50,7 +50,7 @@ fun TripleOrbitLoading(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
-            strokeWidth = 1.dp,
+            strokeWidth = 2.dp,
             modifier = Modifier
                 .fillMaxSize()
                 .graphicsLayer {
@@ -58,7 +58,7 @@ fun TripleOrbitLoading(modifier: Modifier = Modifier) {
                 })
 
         CircularProgressIndicator(
-            strokeWidth = 1.dp,
+            strokeWidth = 2.dp,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(with(LocalDensity.current) {
@@ -69,7 +69,7 @@ fun TripleOrbitLoading(modifier: Modifier = Modifier) {
                 })
 
         CircularProgressIndicator(
-            strokeWidth = 1.dp,
+            strokeWidth = 2.dp,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(with(LocalDensity.current) {

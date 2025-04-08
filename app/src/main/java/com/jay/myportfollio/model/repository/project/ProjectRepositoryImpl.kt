@@ -14,7 +14,7 @@ class ProjectRepositoryImpl : ProjectRepository {
             try {
                 val snapShot =
                     firestore
-                        .collection("projects")
+                        .collection(PROJECTS)
                         .get()
                         .await()
 
@@ -23,12 +23,18 @@ class ProjectRepositoryImpl : ProjectRepository {
                 if (projects.isNotEmpty()) {
                     Result.Success(projects)
                 } else {
-                    Result.Error(Exception("Projects not found"))
+                    Result.Error(Exception(ERROR_FETCHING_DATA))
                 }
             } catch (e: Exception) {
                 Result.Error(e)
 
             }
         }
+    }
+    companion object{
+
+        const val ERROR_FETCHING_DATA = "No Projects Found"
+        const val PROJECTS = "projects"
+
     }
 }

@@ -14,8 +14,8 @@ class ProfileRepositoryImpl : ProfileRepository {
             try {
                 val snapShot =
                     firestore
-                        .collection("profile")
-                        .document("jaykumar_vaghasiya")
+                        .collection(PROFILE_COLLECTION)
+                        .document(USER)
                         .get()
                         .await()
 
@@ -24,12 +24,18 @@ class ProfileRepositoryImpl : ProfileRepository {
                 if (profile != null) {
                     Result.Success(profile)
                 } else {
-                    Result.Error(Exception("User not found"))
+                    Result.Error(Exception(ERROR_FETCHING_DATA))
                 }
             } catch (e: Exception) {
                 Result.Error(e)
 
             }
         }
+    }
+    companion object{
+        const val PROFILE_COLLECTION = "profile"
+        const val ERROR_FETCHING_DATA = "No Profile Found"
+        const val USER = "jaykumar_vaghasiya"
+
     }
 }

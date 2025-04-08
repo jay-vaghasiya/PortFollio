@@ -61,6 +61,7 @@ import com.jay.myportfollio.ui.theme.skyLightBlue
 import com.jay.myportfollio.utils.Constant.list
 import com.jay.myportfollio.utils.PulseLoading
 import com.jay.myportfollio.utils.StrawFordFont
+import com.jay.myportfollio.utils.TripleOrbitLoading
 import com.jay.myportfollio.viewmodel.ProfileViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -89,7 +90,7 @@ fun LandingScreen(navController: NavHostController) {
                         ,
                     contentAlignment = Alignment.Center
                 ) {
-                    PulseLoading(color = OrangeRed, modifier = Modifier.size(120.dp))
+                    TripleOrbitLoading( modifier = Modifier.size(120.dp))
                 }
             }
 
