@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.firebase)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
+
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -89,5 +91,8 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     implementation(libs.lottie.compose)
+
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.google.firebase.analytics)
 
 }
