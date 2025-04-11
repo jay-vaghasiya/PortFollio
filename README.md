@@ -4,8 +4,6 @@ A clean, modern portfolio Android app built using **Kotlin** and **Jetpack Compo
 
 ## 📱 Screenshots
 
-| Home Screen | Projects | About |
-|------------|----------|-------|
 ![about-me](https://github.com/user-attachments/assets/b452ee1f-de09-431d-be54-fa1fce879090)
 ![contact-me](https://github.com/user-attachments/assets/7837203f-1b5e-4d5f-aa02-75de9c166dd4)
 ![landing](https://github.com/user-attachments/assets/bffb6eea-4f02-426e-9a8b-68fcf03f69a2)
