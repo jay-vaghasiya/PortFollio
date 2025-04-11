@@ -51,6 +51,8 @@ import com.jay.myportfollio.ui.theme.Pink50
 import com.jay.myportfollio.ui.theme.Pink80
 import com.jay.myportfollio.utils.PulseLoading
 import com.jay.myportfollio.utils.StrawFordFont
+import com.jay.myportfollio.view.screen.component.ErrorState
+import com.jay.myportfollio.view.screen.component.LoadingState
 import com.jay.myportfollio.viewmodel.ProjectViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -75,13 +77,7 @@ fun KnowMyWorkScreen(navController: NavHostController) {
     ) { targetState ->
         when (targetState) {
             is Result.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    PulseLoading(color = OrangeRed, modifier = Modifier.size(120.dp))
-                }
+                LoadingState(modifier = Modifier.fillMaxSize())
             }
 
             is Result.Success -> {
@@ -92,13 +88,9 @@ fun KnowMyWorkScreen(navController: NavHostController) {
 
             is Result.Error -> {
                 val error = targetState.exception.message
-                Text(
-                    text = "Error: $error",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Red),
-                    color = Color.White
-                )
+                if (error != null) {
+                    ErrorState(modifier = Modifier.fillMaxSize(), error)
+                }
             }
         }
     }

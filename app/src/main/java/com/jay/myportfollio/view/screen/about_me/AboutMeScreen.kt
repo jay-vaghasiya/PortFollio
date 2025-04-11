@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,11 +45,12 @@ import com.jay.myportfollio.model.datamodel.DataProfile
 import com.jay.myportfollio.model.datamodel.Result
 import com.jay.myportfollio.ui.theme.BlueLight
 import com.jay.myportfollio.utils.StrawFordFont
-import com.jay.myportfollio.utils.TripleOrbitLoading
 import com.jay.myportfollio.view.components.GlassMorphicBox
 import com.jay.myportfollio.view.screen.about_me.page.AcademicPage
 import com.jay.myportfollio.view.screen.about_me.page.ExperiencePage
 import com.jay.myportfollio.view.screen.about_me.page.ProfileSummary
+import com.jay.myportfollio.view.screen.component.ErrorState
+import com.jay.myportfollio.view.screen.component.LoadingState
 import com.jay.myportfollio.viewmodel.ProfileViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -75,14 +75,7 @@ fun AboutMeScreen(navController: NavHostController) {
     ) { targetState ->
         when (targetState) {
             is Result.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                    ,
-                    contentAlignment = Alignment.Center
-                ) {
-                    TripleOrbitLoading( modifier = Modifier.size(120.dp))
-                }
+                LoadingState(modifier = Modifier.fillMaxSize())
             }
 
             is Result.Success -> {
@@ -92,13 +85,9 @@ fun AboutMeScreen(navController: NavHostController) {
 
             is Result.Error -> {
                 val error = targetState.exception.message
-                Text(
-                    text = "Error: $error",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Red),
-                    color = Color.White
-                )
+                if (error != null) {
+                    ErrorState(modifier = Modifier.fillMaxSize(), error)
+                }
             }
         }
     }

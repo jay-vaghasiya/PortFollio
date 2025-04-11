@@ -14,6 +14,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -36,11 +38,14 @@ import com.jay.myportfollio.ui.theme.skyBlue
 import com.jay.myportfollio.ui.theme.skyLightBlue
 import com.jay.myportfollio.view.screen.ContactMeScreen
 import com.jay.myportfollio.view.screen.about_me.AboutMeScreen
+import com.jay.myportfollio.view.screen.component.NoInternetState
 import com.jay.myportfollio.view.screen.know_my_work.KnowMyWorkScreen
 import com.jay.myportfollio.view.screen.landing.LandingScreen
 import com.jay.myportfollio.view.screen.where_i_am.WhereIAmScreen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     private lateinit var connectivityObserver: ConnectivityObserver
@@ -68,31 +73,29 @@ class MainActivity : ComponentActivity() {
                 snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 modifier = Modifier.fillMaxSize()
             ) {  paddingValues ->
-                ConnectivityHandler(connectivityObserver, snackbarHostState)
-                AppNavigation(
-                    navController = navController,
-                    paddingValues = paddingValues,
-                    backgroundBrush = backgroundBrush
+
+                val status by connectivityObserver.observe().collectAsState(
+                    initial = ConnectivityObserver.Status.Available
                 )
+
+                when (status) {
+                    ConnectivityObserver.Status.Lost,
+                    ConnectivityObserver.Status.Unavailable -> {
+                        NoInternetState(modifier = Modifier.fillMaxSize())
+                    }
+
+                    else -> {
+                        AppNavigation(
+                            navController = navController,
+                            paddingValues = paddingValues,
+                            backgroundBrush = backgroundBrush
+                        )
+                    }
+                }
+
             }
         }
     }
-
-    @Composable
-    fun ConnectivityHandler(
-        connectivityObserver: ConnectivityObserver,
-        snackbarHostState: SnackbarHostState
-    ) {
-        // Observe connectivity changes once for the lifetime of the app
-        LaunchedEffect(connectivityObserver) {
-            connectivityObserver.observe()
-                .onEach { status ->
-                    snackbarHostState.showSnackbar(message = "Internet is $status")
-                }
-                .launchIn(this)
-        }
-    }
-
     @Composable
     fun AppNavigation(
         navController: NavHostController,
