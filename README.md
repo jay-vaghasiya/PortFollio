@@ -38,7 +38,7 @@ A clean, modern portfolio Android app built using **Kotlin** and **Jetpack Compo
 
 - **Jay Vaghasiya**
 - [GitHub](https://github.com/jay-vaghasiya)
-- [LinkedIn](https://linkedin.com/in/jay-vaghasiya) *(Update if needed)*
+- [LinkedIn](https://www.linkedin.com/in/jaykumar-vaghasiya-b0522b211/)
 
 ---
 
