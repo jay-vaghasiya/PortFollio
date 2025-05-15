@@ -13,13 +13,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,7 +29,6 @@ import com.jay.myportfollio.model.datamodel.AboutMe
 import com.jay.myportfollio.model.datamodel.ContactMe
 import com.jay.myportfollio.model.datamodel.KnowMyWork
 import com.jay.myportfollio.model.datamodel.Landing
-import com.jay.myportfollio.model.datamodel.MyWork
 import com.jay.myportfollio.model.datamodel.WhereIAm
 import com.jay.myportfollio.observer.ConnectivityObserver
 import com.jay.myportfollio.observer.NetworkConnectivityObserver
@@ -42,10 +41,6 @@ import com.jay.myportfollio.view.screen.component.NoInternetState
 import com.jay.myportfollio.view.screen.know_my_work.KnowMyWorkScreen
 import com.jay.myportfollio.view.screen.landing.LandingScreen
 import com.jay.myportfollio.view.screen.where_i_am.WhereIAmScreen
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     private lateinit var connectivityObserver: ConnectivityObserver
@@ -74,14 +69,14 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize()
             ) {  paddingValues ->
 
-                val status by connectivityObserver.observe().collectAsState(
-                    initial = ConnectivityObserver.Status.Available
+                val status by connectivityObserver.observe().collectAsStateWithLifecycle(
+                    initialValue = ConnectivityObserver.Status.Available
                 )
 
                 when (status) {
                     ConnectivityObserver.Status.Lost,
                     ConnectivityObserver.Status.Unavailable -> {
-                        NoInternetState(modifier = Modifier.fillMaxSize())
+                        NoInternetState(modifier = Modifier.fillMaxSize().background(backgroundBrush))
                     }
 
                     else -> {
@@ -150,10 +145,6 @@ class MainActivity : ComponentActivity() {
             composable<ContactMe> {
                 val args = it.toRoute<ContactMe>()
                 ContactMeScreen(args.email,args.phone,navController)
-            }
-            composable<MyWork> {
-
-                MyWorkScreen( navController)
             }
         }
     }

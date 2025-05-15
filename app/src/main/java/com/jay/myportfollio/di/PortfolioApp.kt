@@ -2,6 +2,7 @@ package com.jay.myportfollio.di
 
 import android.app.Application
 import android.util.Log
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -11,7 +12,7 @@ class PortfolioApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Log.d("KoinSetup", "Initializing Koin...")
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = true
         startKoin {
             androidContext(this@PortfolioApp)
             androidLogger(Level.DEBUG)

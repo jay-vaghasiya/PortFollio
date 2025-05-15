@@ -25,6 +25,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,11 +42,15 @@ import com.jay.myportfollio.ui.theme.BBlue
 import com.jay.myportfollio.ui.theme.Pink
 import com.jay.myportfollio.utils.StrawFordFont
 import com.jay.myportfollio.utils.sendMail
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun ContactMeScreen(email:String,phone:String,navController: NavHostController) {
     val context = LocalContext.current
+    val isNavigating = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -51,6 +58,7 @@ fun ContactMeScreen(email:String,phone:String,navController: NavHostController) 
             .padding(top = 24.dp)
     ) {
         IconButton(onClick = {
+            isNavigating.value = true
             navController.popBackStack()
         }, modifier = Modifier.padding(8.dp)) {
             Icon(
@@ -94,8 +102,12 @@ fun ContactMeScreen(email:String,phone:String,navController: NavHostController) 
                     .background(
                         color = Pink
                     )
-                    .clickable {
+                    .clickable(enabled = !isNavigating.value) {
                         context.sendMail(email)
+                        scope.launch {
+                            delay(1000L)
+                            isNavigating.value = false
+                        }
                     }) {
                     Column(
                         modifier = Modifier
@@ -175,8 +187,14 @@ fun ContactMeScreen(email:String,phone:String,navController: NavHostController) 
                     .background(
                         color = Pink
                     )
-                    .clickable {
+                    .clickable(enabled = !isNavigating.value) {
+                        isNavigating.value = true
                         context.startActivity(intent)
+                        scope.launch {
+                            delay(1000L)
+                            isNavigating.value = false
+                        }
+
                     }) {
                     Column(
                         modifier = Modifier

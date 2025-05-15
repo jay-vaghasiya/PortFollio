@@ -1,6 +1,5 @@
 package com.jay.myportfollio.view.screen.landing
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -11,11 +10,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -32,7 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,25 +42,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.jay.myportfollio.R
 import com.jay.myportfollio.model.datamodel.AboutMe
 import com.jay.myportfollio.model.datamodel.ContactMe
 import com.jay.myportfollio.model.datamodel.DataProfile
 import com.jay.myportfollio.model.datamodel.KnowMyWork
-import com.jay.myportfollio.model.datamodel.MyWork
 import com.jay.myportfollio.model.datamodel.Result
 import com.jay.myportfollio.model.datamodel.WhereIAm
 import com.jay.myportfollio.ui.theme.BBlue
 import com.jay.myportfollio.ui.theme.GrayBlue
 import com.jay.myportfollio.ui.theme.NavyBlue
-import com.jay.myportfollio.ui.theme.OrangeRed
 import com.jay.myportfollio.ui.theme.Pink
 import com.jay.myportfollio.ui.theme.skyBlue
 import com.jay.myportfollio.ui.theme.skyLightBlue
 import com.jay.myportfollio.utils.Constant.list
-import com.jay.myportfollio.utils.PulseLoading
 import com.jay.myportfollio.utils.StrawFordFont
-import com.jay.myportfollio.utils.TripleOrbitLoading
 import com.jay.myportfollio.view.screen.component.ErrorState
 import com.jay.myportfollio.view.screen.component.LoadingState
 import com.jay.myportfollio.viewmodel.ProfileViewModel
@@ -69,7 +65,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LandingScreen(navController: NavHostController) {
-    val viewmodel: ProfileViewModel = koinViewModel()   
+    val viewmodel: ProfileViewModel = koinViewModel()
     val userState by viewmodel.profileState.collectAsState()
 
 
@@ -91,13 +87,20 @@ fun LandingScreen(navController: NavHostController) {
 
             is Result.Success -> {
                 val user = targetState.data
-                ProfileContent(user,navController)
+
+                FirebaseCrashlytics.getInstance().setUserId(user.email ?: "unknown")
+                FirebaseCrashlytics.getInstance().setCustomKey("username", user.name ?: "unknown")
+                FirebaseCrashlytics.getInstance().setCustomKey("role", user.role ?: "unknown")
+
+                ProfileContent(user, navController)
             }
 
             is Result.Error -> {
                 val error = targetState.exception.message
-                if (error != null) {
-                    ErrorState(modifier = Modifier.fillMaxSize(), error)
+                error?.let {
+                    FirebaseCrashlytics.getInstance().log("LandingScreen ErrorState: $it")
+                    FirebaseCrashlytics.getInstance().recordException(targetState.exception)
+                    ErrorState(modifier = Modifier.fillMaxSize(), it)
                 }
             }
         }
@@ -111,6 +114,8 @@ fun ProfileContent(user: DataProfile, navController: NavHostController) {
     val backgroundBrush = remember {
         Brush.verticalGradient(listOf(skyBlue, skyLightBlue, Color.White))
     }
+    var isNavigating by remember { mutableStateOf(false) }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -180,15 +185,15 @@ fun ProfileContent(user: DataProfile, navController: NavHostController) {
                                 .fillMaxWidth()
                                 .weight(1f)
                         ) {
-                        Text(
-                            text = "Can i help you?",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp),
-                            fontFamily = StrawFordFont.FontFamily,
-                            style = MaterialTheme.typography.titleSmall,
-                            color = BBlue
-                        )
+                            Text(
+                                text = "Can i help you?",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                fontFamily = StrawFordFont.FontFamily,
+                                style = MaterialTheme.typography.titleSmall,
+                                color = BBlue
+                            )
                             Text(
                                 text = "Let's work?",
                                 modifier = Modifier
@@ -199,14 +204,20 @@ fun ProfileContent(user: DataProfile, navController: NavHostController) {
                                 style = MaterialTheme.typography.titleMedium,
                                 color = BBlue
                             )
-                    }
+                        }
                         ElevatedButton(
                             onClick = {
-                                navController.navigate(ContactMe(
-                                    email = user.email.toString(),
-                                    phone = user.phone.toString()
-                                ))
-
+                                if (!isNavigating) {
+                                    isNavigating = true
+                                    FirebaseCrashlytics.getInstance()
+                                        .log("Contact button clicked by ${user.email}")
+                                    navController.navigate(
+                                        ContactMe(
+                                            user.email.orEmpty(),
+                                            user.phone.orEmpty()
+                                        )
+                                    )
+                                }
                             }, colors = ButtonDefaults.elevatedButtonColors(
                                 containerColor = Pink, contentColor = Color.White
                             ), shape = RoundedCornerShape(16.dp)
@@ -240,8 +251,12 @@ fun ProfileContent(user: DataProfile, navController: NavHostController) {
                                     .clip(
                                         RoundedCornerShape(24.dp)
                                     )
-                                    .clickable {
-                                        Log.d("Indexing",index.toString())
+                                    .clickable(enabled = !isNavigating) {
+                                        isNavigating = true
+                                        FirebaseCrashlytics
+                                            .getInstance()
+                                            .log("Profile option clicked - index $index")
+
                                         when (index) {
                                             0 -> {
                                                 navController.navigate(
